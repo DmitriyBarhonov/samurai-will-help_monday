@@ -1,6 +1,7 @@
 import React, {useRef} from 'react';
 import s from './MyPosts.module.css';
 import { PostType } from '../../redux/state';
+import Post from './Post/Post';
 
 type MyPostsProps = {
     postData: PostType[]
@@ -14,7 +15,7 @@ console.log(props.postData);
 
     let postsElements = props.postData
     
-    const addPost = () => {}   
+    const addPost = () => {}
 
     const updateText = () => {}
 
@@ -31,7 +32,7 @@ console.log(props.postData);
         <div className={s.posts}>
             {postsElements.map(el=>{
                 return(
-                    <div>{el.message}</div>
+                   <Post  title={el.message}  likesCount={el.likesCount}/>
                 )
             })}
         </div>

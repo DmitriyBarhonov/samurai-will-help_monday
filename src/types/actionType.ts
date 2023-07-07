@@ -16,6 +16,10 @@ export type UpdateTextActionType ={
     newText: string
 }
 
+
+
+
+
 export type  UpdateMessageTextActionType ={
     type: typeof UPDATE_MESSAGE
     newMassageText: string
@@ -25,3 +29,5 @@ export type AddMassageActionType ={
     type: typeof ADD_MESSAGE
     message: string
 }
+
+// удалить  

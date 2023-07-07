@@ -9,7 +9,11 @@ const initialState:ProfilePageType  = {
     ],
     updateText: '',
 }
-
+//Переделать if else на switch case
+//Избавиться от переменной stateCopy, создавать объект и сразу его возвращать без промежуточной переменной stateCopy
+//push используется редко, создав новый массив, закидываем все элементы из старого массива и после запятой дописываем еще один новый элемент.
+//При формировании нового объекта для свойства message значение брать из state, а не из аргумента функции addPost()
+//addPost для запуска функции, а что куда добавлять это дело BLL.
 export const profileReducer = (state: ProfilePageType = initialState, action: RootActionType): ProfilePageType => {
 
     if (action.type === "ADD-POST") {
@@ -18,10 +22,15 @@ export const profileReducer = (state: ProfilePageType = initialState, action: Ro
             message: action.newMassage,
             likesCount: 0
         };
-        state.posts.unshift(newPost)
-        state.updateText = ''
+        let stateCopy = {...state}
+        stateCopy.posts = [...state.posts]
+        stateCopy.posts.unshift(newPost)
+        stateCopy.updateText = ''
+        return stateCopy
     } else if (action.type === "UPDATE-TEXT") {
-        state.updateText = action.newText
+        let stateCopy = {...state}
+        stateCopy.updateText = action.newText
+        return    stateCopy
     }
     return state
 }

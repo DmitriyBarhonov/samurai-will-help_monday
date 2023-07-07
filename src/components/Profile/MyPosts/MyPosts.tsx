@@ -8,24 +8,24 @@ import { UpdateTextAC, addPostAC } from '../../store/reducers/profileReducer';
 
 type MyPostsProps = {
     myPosts: PostType[]
-    dispatch: (action: RootActionType) => void
     newText: string
+    addPost:(text:string) => void
+    updateText: (text:string) => void
 }
-
+//Давайте избавимся от useRef и обсудить почему он нам здесь уже не нужен
 const MyPosts = (props: MyPostsProps) => {
 
 
     let newTextElement = useRef<HTMLTextAreaElement>(null)
 
-
     let postsElements = props.myPosts.map(((el) => <Post key={el.id} title={el.message} likesCount={el.likesCount} />))
 
     const addPost = () => {
-        if (newTextElement.current) props.dispatch(addPostAC(newTextElement.current.value))
+        if (newTextElement.current) props.addPost(newTextElement.current.value)
     }
 
     const updateTextHandler = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        props.dispatch(UpdateTextAC(e.currentTarget.value))
+        props.updateText(e.currentTarget.value)
     }
     const onKeyDownHandler = (e: KeyboardEvent<HTMLTextAreaElement>) => {
         if (e.key === "Enter" && newTextElement.current?.value) addPost()

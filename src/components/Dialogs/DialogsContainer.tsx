@@ -1,6 +1,3 @@
-import s from './Dialogs.module.css'
-import { useNavigate } from 'react-router-dom';
-import { DialogsDateType, MessagesDateType } from '../store/state';
 import { StoreType } from '../store/reduxStore/storeRedux';
 import { addMessageAC, updateMessageAC } from '../store/reducers/dialogsReducer';
 import Dialogs from './Dialogs';

@@ -1,9 +1,17 @@
-import { AddMassageActionType, RootActionType, UpdateMessageTextActionType } from "../../../types/actionType";
-import { MassagePageType } from "../state";
+import {RootActionType, SendMessageTypeActionType, UpdateMessageTextActionType} from "../../../types/actionType";
 
 
 
-const initialState:MassagePageType  = {
+export type DialogsDateType = {
+    id: number
+    name: string
+}
+
+export type MessagesDateType = {
+    id: number
+    message: string
+}
+const initialState = {
     dialogsData: [
         { id: 1, name: 'Yulia' },
         { id: 2, name: 'semen' },
@@ -11,7 +19,7 @@ const initialState:MassagePageType  = {
         { id: 4, name: 'Lola' },
         { id: 5, name: 'Evgenia' },
         { id: 6, name: 'Sonja' }
-    ],
+    ]  as Array<DialogsDateType>,
     messagesData: [
         { id: 1, message: 'Hi' },
         { id: 2, message: 'How is your it-Kamasutra?' },
@@ -19,39 +27,35 @@ const initialState:MassagePageType  = {
         { id: 4, message: 'Yo' },
         { id: 5, message: 'Yo' },
         { id: 6, message: 'Yo' },
-    ],
-    updateMassage: ''
+    ] as Array<MessagesDateType>,
+    newMessageBody: ''
 }
+export type InitialStateType = typeof initialState
 
-export const dialogsReducer = (state: MassagePageType = initialState, action: RootActionType): MassagePageType => {
+export const dialogsReducer = (state:InitialStateType = initialState, action: RootActionType): InitialStateType => {
 
-    if (action.type === "UPDATE-MESSAGE") {
-        state.updateMassage = action.newMassageText
-
-    } else if (action.type === " ADD-MESSAGE") {
-        let newMessage = {
-            id: 9,
-            message: action.message
-        }
-        state.messagesData.push(newMessage)
-        state.updateMassage = ''
+    if (action.type === 'UPDATE_NEW_MESSAGE_BODY') {
+       return  {...state, newMessageBody: action.newMessageTextBody}
+    } else if (action.type === 'SEND_MESSAGE') {
+        // let newMessage = {
+        //     id: 9,
+        //     message: state.updateMassage
+        // }
+        return {...state, newMessageBody: "", messagesData: [...state.messagesData, {
+                id: 9,
+                message: state.newMessageBody
+            } ]}
     }
-
     return state
 }
-
-
-export const updateMessageAC = (newMassageText: string): UpdateMessageTextActionType => {
+export const updateNewMessageBodyAC = (newMessageTextBody: string): UpdateMessageTextActionType => {
     return {
-        type: "UPDATE-MESSAGE",
-        newMassageText
+        type: 'UPDATE_NEW_MESSAGE_BODY',
+      newMessageTextBody
     }
 }
-
-export const addMessageAC = (message: string): AddMassageActionType => {
+export const sendMessageAC = (): SendMessageTypeActionType => {
     return {
-        type: " ADD-MESSAGE",
-        message
+        type: 'SEND_MESSAGE',
     }
 }
-

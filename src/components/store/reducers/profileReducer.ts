@@ -1,50 +1,51 @@
 import { AddPostActionType, RootActionType, UpdateTextActionType } from './../../../types/actionType';
-import { ProfilePageType } from "../state";
 
-const initialState:ProfilePageType  = {
-    posts: [
+export type PostType = {
+    id: number
+    message: string
+    likesCount: number
+}
+
+const initialState = {
+    postsData: [
         { id: 1, message: 'my first post', likesCount: 12 },
         { id: 2, message: 'how are you ?', likesCount: 11 },
         { id: 3, message: 'put likes', likesCount: 17 }
-    ],
-    updateText: '',
+    ] as Array<PostType>,
+    newPostText: '',
 }
-//Переделать if else на switch case
-//Избавиться от переменной stateCopy, создавать объект и сразу его возвращать без промежуточной переменной stateCopy
-//push используется редко, создав новый массив, закидываем все элементы из старого массива и после запятой дописываем еще один новый элемент.
-//При формировании нового объекта для свойства message значение брать из state, а не из аргумента функции addPost()
-//addPost для запуска функции, а что куда добавлять это дело BLL.
-export const profileReducer = (state: ProfilePageType = initialState, action: RootActionType): ProfilePageType => {
+export type InitialStateType = typeof initialState
+//InitialStateType перед названием переменной initialState писать не нужно так как, когда пишем: typeof initialState, то исходим
+//из объекта и если объект будет ссылаться на типизацию InitialStateType которую создает оператор typeof, получается
+//циклическая зависимость и непонятно что откуда. 
+export const profileReducer = (state:InitialStateType = initialState, action: RootActionType): InitialStateType => {
 
     if (action.type === "ADD-POST") {
         let newPost = {
             id: 5,
-            message: action.newMassage,
+            message: state.newPostText,
             likesCount: 0
         };
         let stateCopy = {...state}
-        stateCopy.posts = [...state.posts]
-        stateCopy.posts.unshift(newPost)
-        stateCopy.updateText = ''
+        stateCopy.postsData = [...state.postsData]
+        stateCopy.postsData.unshift(newPost)
+        stateCopy.newPostText = ''
         return stateCopy
-    } else if (action.type === "UPDATE-TEXT") {
+    } else if (action.type === 'UPDATE_NEW_POST_TEXT') {
         let stateCopy = {...state}
-        stateCopy.updateText = action.newText
+        stateCopy.newPostText = action.newText
         return    stateCopy
     }
     return state
 }
 
-export const addPostAC = (newMassage: string): AddPostActionType => {
-    return {
-        type: 'ADD-POST',
-        newMassage
-    }
+export const addPostAC = (): AddPostActionType => {
+    return {type: 'ADD-POST'}
 }
 
-export const UpdateTextAC = (newText: string): UpdateTextActionType => {
+export const updateNewPostTextAC = (newText: string): UpdateTextActionType => {
     return {
-        type: 'UPDATE-TEXT',
+        type: 'UPDATE_NEW_POST_TEXT',
         newText
     }
 }

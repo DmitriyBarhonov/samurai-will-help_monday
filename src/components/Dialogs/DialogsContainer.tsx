@@ -1,29 +1,36 @@
-import { StoreType } from '../store/reduxStore/storeRedux';
-import { addMessageAC, updateMessageAC } from '../store/reducers/dialogsReducer';
-import Dialogs from './Dialogs';
+import {AppRootStateType} from "../store/reduxStore/storeRedux";
+import Dialogs from "./Dialogs";
+import {connect} from "react-redux";
+import {Dispatch} from "redux";
+import {DialogsDateType, MessagesDateType} from "../store/state";
+import {sendMessageAC, updateNewMessageBodyAC} from "../store/reducers/dialogsReducer";
 
 
-
-type DialogsPropsType = {
-    store: StoreType
+type mapStateToPropsType = {
+    dialogsData: DialogsDateType[]
+    messagesData: MessagesDateType[]
+    newMessageBody: string
+}
+type mapDispatchToPropsType = {
+    updateNewMessageBody: (newMessageTextBody: string) => void
+    sendMessage: () => void
 }
 
-export const DialogsContainer: React.FC<DialogsPropsType> = (props) => {
-    // const navigate = useNavigate();
-    const state = props.store.getState().dialogsPage
-    const dispatch = props.store.dispatch
-
-    const updateMessage = (newMessage: string) => {
-        props.store.dispatch(updateMessageAC(newMessage))
+const mapStateToProps = (state: AppRootStateType): mapStateToPropsType  => {
+    return {
+        dialogsData: state.dialogsPage.dialogsData,
+        messagesData: state.dialogsPage.messagesData,
+        newMessageBody: state.dialogsPage.newMessageBody
     }
-
-    const addMessage = (message: string) => {
-        props.store.dispatch(addMessageAC(message))
-    }
-
-    return (
-        <Dialogs state={state} updateMessage={updateMessage} addMessage={addMessage} />
-    )
 }
-
-export default Dialogs;
+const mapDispatchToProps =(dispatch: Dispatch): mapDispatchToPropsType  => {
+    return {
+        updateNewMessageBody: (newMessageTextBody: string) => {
+            dispatch(updateNewMessageBodyAC(newMessageTextBody))
+        },
+        sendMessage: () => {
+        dispatch(sendMessageAC())
+    }
+    }
+}
+export const DialogsContainer = connect(mapStateToProps,mapDispatchToProps)(Dialogs)

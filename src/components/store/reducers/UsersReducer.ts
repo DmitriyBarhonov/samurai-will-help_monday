@@ -2,7 +2,9 @@ import { UserItem } from "../../Users/Users";
 
 
 type InitialStateType = {
-    users: UserItem[];
+    users: UserItem[]
+    pageSize: number
+    totalUsersCount: number
 };
 
 
@@ -10,8 +12,10 @@ type ActionsUsersType = ReturnType<typeof followAC> | ReturnType<typeof unfollow
 
 
 
-const initialState: any = {
+const initialState: InitialStateType = {
     users: [],
+    pageSize: 5,
+    totalUsersCount: 0
 }
 
 

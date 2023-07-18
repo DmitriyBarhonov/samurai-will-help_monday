@@ -8,6 +8,8 @@ type UsersPropsType = {
     unfollow: (useId: number) => void
     setUsers: (users: UserItem[]) => void
     users: UserItem[]
+    pageSize: number
+    totalUsersCount: number
 }
 
 export type UserItem = {
@@ -30,15 +32,24 @@ export type UsersResponse = {
 
 export class Users extends React.Component<UsersPropsType> {
 
- 
+
     componentDidMount() {
         axios.get<UsersResponse>("https://social-network.samuraijs.com/api/1.0/users")
-                .then((res) => {
-                    this.props.setUsers(res.data.items)
-                })
+            .then((res) => {
+                this.props.setUsers(res.data.items)
+            })
     }
- 
+
     render(): React.ReactNode {
+
+        let pages: Array<number> = []
+        const pageCount = Math.ceil(this.props.totalUsersCount / this.props.pageSize);
+        for (let i = 1; i < pageCount; i++) {
+            if (pages.length < 10) {
+                pages.push(i);
+            }
+        }
+
         return <>
             {this.props.users.map((u) => {
                 return <div key={u.id}>

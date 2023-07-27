@@ -1,15 +1,18 @@
 import axios from "axios"
 import React from "react"
-
+import styles from "./usersStyle.module.css"
 
 
 type UsersPropsType = {
     follow: (useId: number) => void
     unfollow: (useId: number) => void
     setUsers: (users: UserItem[]) => void
+    setCurrentPage: (currentPage: number) => void
+    setTotalUsersCountAC: (totalUsersCount: number) => void
     users: UserItem[]
     pageSize: number
     totalUsersCount: number
+    currentPage: number
 }
 
 export type UserItem = {
@@ -34,23 +37,37 @@ export class Users extends React.Component<UsersPropsType> {
 
 
     componentDidMount() {
-        axios.get<UsersResponse>("https://social-network.samuraijs.com/api/1.0/users")
+        axios.get<UsersResponse>(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`)
             .then((res) => {
                 this.props.setUsers(res.data.items)
+                this.props.setTotalUsersCountAC(res.data.totalCount)
             })
     }
+
+    onPageChange = (pageNumber: number) => {
+        this.props.setCurrentPage(pageNumber)
+        axios.get<UsersResponse>(`https://social-network.samuraijs.com/api/1.0/users?page=${pageNumber}&count=${this.props.pageSize}`)
+        .then((res) => {
+            this.props.setUsers(res.data.items)
+        })
+    }
+
+
 
     render(): React.ReactNode {
 
         let pages: Array<number> = []
-        const pageCount = Math.ceil(this.props.totalUsersCount / this.props.pageSize);
-        for (let i = 1; i < pageCount; i++) {
-            if (pages.length < 10) {
+        const pageCount = Math.ceil(this.props.totalUsersCount / this.props.pageSize)
+        for (let i = 1; i <= pageCount; i++) {
+            if (pages.length < 15) {
                 pages.push(i);
             }
         }
-
         return <>
+            {pages.map((p) => {
+                return <button onClick={() => { this.onPageChange(p) }} className={this.props.currentPage === p ? styles.selectedPage : ""} key={p}>{p}</button>
+            })}
+
             {this.props.users.map((u) => {
                 return <div key={u.id}>
                     <div>

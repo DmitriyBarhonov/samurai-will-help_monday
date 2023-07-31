@@ -1,12 +1,16 @@
 import axios from "axios"
+import {inspect} from "util";
+import styles from "./usersStyle.module.css"
 
 
 
 type UsersPropsType = {
     follow: (useId: number) => void
     unfollow: (useId: number) => void
-    setUsers: (users: UserItem[]) => void
     users: UserItem[]
+    currentPage: number
+    onPageChange: (pageNumber: number) =>  void
+    pages: Array<number>
 }
 
 export type UserItem = {
@@ -20,25 +24,14 @@ export type UserItem = {
     followed: boolean;
 }
 
-export type UsersResponse = {
-    error: null | string
-    items: Array<UserItem>
-    totalCount: number
-}
-
- 
-export const Usersc = (props: UsersPropsType) => {
-
-    if(props.users.length === 0){
-        axios.get<UsersResponse>("https://social-network.samuraijs.com/api/1.0/users")
-            .then((res) => {
-                props.setUsers(res.data.items)
-            })
-    }
- 
+export const Users = (props: UsersPropsType) => {
 
     return <>
+        {props.pages.map((p) => {
+            return <button onClick={() => { props.onPageChange(p) }} className={props.currentPage === p ? styles.selectedPage : ""} key={p}>{p}</button>
+        })}
       
+
         {props.users.map((u) => {
             return <div key={u.id}>
                 <div>

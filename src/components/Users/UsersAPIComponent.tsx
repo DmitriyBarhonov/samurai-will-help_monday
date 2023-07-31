@@ -1,7 +1,8 @@
 import axios from "axios"
 import React from "react"
-import {Users} from "./Users";
-
+import { Users } from "./Users";
+import preloader from "./../image/Rocket.gif"
+import { Preloader } from "../common/Preploader/Preloader";
 
 
 type UsersPropsType = {
@@ -10,10 +11,12 @@ type UsersPropsType = {
     setUsers: (users: UserItem[]) => void
     setCurrentPage: (currentPage: number) => void
     setTotalUsersCount: (totalUsersCount: number) => void
+    setIsFetching: (isFetching: boolean) => void
     users: UserItem[]
     pageSize: number
     totalUsersCount: number
     currentPage: number
+    isFetching: boolean
 }
 
 export type UserItem = {
@@ -34,12 +37,14 @@ export type UsersResponse = {
 }
 
 
-export class UsersAPIComponen  extends React.Component<UsersPropsType> {
+export class UsersAPIComponen extends React.Component<UsersPropsType> {
 
 
     componentDidMount() {
+        this.props.setIsFetching(true)
         axios.get<UsersResponse>(`https://social-network.samuraijs.com/api/1.0/users?page=${this.props.currentPage}&count=${this.props.pageSize}`)
             .then((res) => {
+                this.props.setIsFetching(false)
                 this.props.setUsers(res.data.items)
                 this.props.setTotalUsersCount(res.data.totalCount)
             })
@@ -47,8 +52,10 @@ export class UsersAPIComponen  extends React.Component<UsersPropsType> {
 
     onPageChange = (pageNumber: number) => {
         this.props.setCurrentPage(pageNumber)
+        this.props.setIsFetching(true)
         axios.get<UsersResponse>(`https://social-network.samuraijs.com/api/1.0/users?page=${pageNumber}&count=${this.props.pageSize}`)
             .then((res) => {
+                this.props.setIsFetching(false)
                 this.props.setUsers(res.data.items)
             })
     }
@@ -63,9 +70,12 @@ export class UsersAPIComponen  extends React.Component<UsersPropsType> {
             }
         }
 
-        return <Users users={this.props.users} follow={this.props.follow} unfollow={this.props.unfollow}
-                      onPageChange={this.onPageChange}
-                      pages={pages} currentPage={this.props.currentPage}  />
+        return <>
+        {this.props.isFetching &&  <Preloader />}
+            <Users users={this.props.users} follow={this.props.follow} unfollow={this.props.unfollow}
+                onPageChange={this.onPageChange}
+                pages={pages} currentPage={this.props.currentPage} />
+        </>
 
     }
 }

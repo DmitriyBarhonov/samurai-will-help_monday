@@ -20,14 +20,14 @@ type mapStateToPropsType = {
     currentPage: number
     isFetching: boolean
 }
-type mapDispatchToPropsType = {
-    follow: (useId: number) => void
-    unfollow: (useId: number) => void
-    setUsers: (users: UserItem[]) => void
-    setCurrentPage: (currentPage: number) => void
-    setTotalUsersCount: (totalUsersCount: number) => void
-    setIsFetching: (isFetching: boolean) => void
-}
+// type mapDispatchToPropsType = {
+//     follow: (useId: number) => void
+//     unfollow: (useId: number) => void
+//     setUsers: (users: UserItem[]) => void
+//     setCurrentPage: (currentPage: number) => void
+//     setTotalUsersCount: (totalUsersCount: number) => void
+//     setIsFetching: (isFetching: boolean) => void
+// }
 const mapStateToProps = (state: AppRootStateType): mapStateToPropsType => {
     return {
         users: state.usersPage.users,
@@ -42,14 +42,4 @@ const mapStateToProps = (state: AppRootStateType): mapStateToPropsType => {
  
 
 
-export const UsersContainer = connect(mapStateToProps,
-    {
-        follow,
-        unfollow,
-        setUsers,
-        setCurrentPage,
-        setTotalUsersCount,
-        setIsFetching,
-    }
-
-)(UsersAPIComponen)
+export const UsersContainer = connect(mapStateToProps,{follow,unfollow,setUsers,setCurrentPage,setTotalUsersCount,setIsFetching,})(UsersAPIComponen)

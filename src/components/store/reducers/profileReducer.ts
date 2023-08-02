@@ -1,9 +1,11 @@
+import { ProfileResponseType } from '../../Profile/ProfileContainer';
 import { AddPostActionType, RootActionType, UpdateTextActionType } from './../../../types/actionType';
 
 export type PostType = {
     id: number
     message: string
     likesCount: number
+
 }
 
 const initialState = {
@@ -13,12 +15,13 @@ const initialState = {
         { id: 3, message: 'put likes', likesCount: 17 }
     ] as Array<PostType>,
     newPostText: '',
+    profile: null as ProfileResponseType | null
 }
 export type InitialStateType = typeof initialState
 //InitialStateType перед названием переменной initialState писать не нужно так как, когда пишем: typeof initialState, то исходим
 //из объекта и если объект будет ссылаться на типизацию InitialStateType которую создает оператор typeof, получается
 //циклическая зависимость и непонятно что откуда. 
-export const profileReducer = (state:InitialStateType = initialState, action: RootActionType): InitialStateType => {
+export const profileReducer = (state: InitialStateType = initialState, action: RootActionType): InitialStateType => {
 
     if (action.type === "ADD-POST") {
         let newPost = {
@@ -26,26 +29,36 @@ export const profileReducer = (state:InitialStateType = initialState, action: Ro
             message: state.newPostText,
             likesCount: 0
         };
-        let stateCopy = {...state}
+        let stateCopy = { ...state }
         stateCopy.postsData = [...state.postsData]
         stateCopy.postsData.unshift(newPost)
         stateCopy.newPostText = ''
         return stateCopy
     } else if (action.type === 'UPDATE_NEW_POST_TEXT') {
-        let stateCopy = {...state}
+        let stateCopy = { ...state }
         stateCopy.newPostText = action.newText
-        return    stateCopy
+        return stateCopy
+    }else if (action.type === 'SET_USER_PROFILE') {
+         return { ...state,  profile: action.profile}
+       
+         
     }
     return state
 }
 
 export const addPostAC = (): AddPostActionType => {
-    return {type: 'ADD-POST'}
+    return { type: 'ADD-POST' }
 }
 
 export const updateNewPostTextAC = (newText: string): UpdateTextActionType => {
     return {
         type: 'UPDATE_NEW_POST_TEXT',
         newText
+    }
+}
+export const setUserProfile = (profile: ProfileResponseType): any => {
+    return {
+        type: "SET_USER_PROFILE",
+        profile
     }
 }

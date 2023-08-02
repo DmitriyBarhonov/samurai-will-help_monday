@@ -1,6 +1,7 @@
 import axios from "axios"
-import {inspect} from "util";
+import { inspect } from "util";
 import styles from "./usersStyle.module.css"
+import { NavLink } from "react-router-dom";
 
 
 
@@ -9,7 +10,7 @@ type UsersPropsType = {
     unfollow: (useId: number) => void
     users: UserItem[]
     currentPage: number
-    onPageChange: (pageNumber: number) =>  void
+    onPageChange: (pageNumber: number) => void
     pages: Array<number>
 }
 
@@ -30,14 +31,17 @@ export const Users = (props: UsersPropsType) => {
         {props.pages.map((p) => {
             return <button onClick={() => { props.onPageChange(p) }} className={props.currentPage === p ? styles.selectedPage : ""} key={p}>{p}</button>
         })}
-      
+
 
         {props.users.map((u) => {
             return <div key={u.id}>
                 <div>
 
                     <div>
-                        <img width="300px" src={ u.photos.small ||"https://drevnerus.ru/drevnerus.ru/public_html/wp-content/uploads/2011/12/volhvy-2.jpg"} alt="photoProfile" />
+                        <NavLink to={`/profile`}>
+                            <img width="300px" src={u.photos.small || "https://drevnerus.ru/drevnerus.ru/public_html/wp-content/uploads/2011/12/volhvy-2.jpg"}
+                             alt="photoProfile" />
+                        </NavLink>
                     </div>
                     <div>
                         {u.followed ?

@@ -6,6 +6,8 @@ import Profile from './Profile';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import { setUserProfile } from '../store/reducers/profileReducer';
+import { withRouter } from './WithRouterHOC';
+
 
 type contacts = {
     github: string;
@@ -32,24 +34,33 @@ export type ProfileResponseType = {
     photos: photos
 }
 
-type ProfileProps = {
-    setUserProfile: (profile:ProfileResponseType )=> void
+type ProfilePropsType = {
+    setUserProfile: (profile: ProfileResponseType) => void
     profile: ProfileResponseType | null
+    match: {
+        params: {
+            userId:number
+        }
+    }
 }
 
-class ProfileContainer extends React.Component<ProfileProps> {
+class ProfileContainer extends React.Component<ProfilePropsType> {
 
+   
+    
     componentDidMount(): void {
-        axios.get<ProfileResponseType>(`https://social-network.samuraijs.com/api/1.0/profile/${2}`)
-        .then((res) => {
-          this.props.setUserProfile(res.data)
-           console.log(this.props);
-           
-        })
+        let userId = this.props.match.params.userId
+        if(!userId) userId = 2
+        axios.get<ProfileResponseType>(`https://social-network.samuraijs.com/api/1.0/profile/${userId}`)
+            .then((res) => {
+                this.props.setUserProfile(res.data)
+                console.log(this.props);
+
+            })
     }
 
-    render() {
-      return  <Profile profile= {this.props.profile}/>
+    render(): React.ReactNode {
+        return <Profile profile={this.props.profile} />
     }
 
 }
@@ -58,8 +69,9 @@ type mapStateToPropsType = {
 }
 const mapStateToProps = (state: AppRootStateType): mapStateToPropsType => {
     return {
-        profile: state.profilePage.profile 
+        profile: state.profilePage.profile
     }
 }
 
-export const ProfileC = connect(mapStateToProps, {setUserProfile})(ProfileContainer);
+
+export const ProfileC = connect(mapStateToProps, { setUserProfile })(withRouter(ProfileContainer));

@@ -26,6 +26,7 @@ export type UserItem = {
 }
 
 export const Users = (props: UsersPropsType) => {
+console.log(props);
 
     return <>
         {props.pages.map((p) => {
@@ -38,7 +39,7 @@ export const Users = (props: UsersPropsType) => {
                 <div>
 
                     <div>
-                        <NavLink to={`/profile`}>
+                        <NavLink to={`/profile/${u.id}`}>
                             <img width="300px" src={u.photos.small || "https://drevnerus.ru/drevnerus.ru/public_html/wp-content/uploads/2011/12/volhvy-2.jpg"}
                              alt="photoProfile" />
                         </NavLink>

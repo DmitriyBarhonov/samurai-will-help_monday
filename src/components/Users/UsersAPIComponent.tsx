@@ -65,7 +65,7 @@ export class UsersAPIComponen extends React.Component<UsersPropsType> {
         let pages: Array<number> = []
         const pageCount = Math.ceil(this.props.totalUsersCount / this.props.pageSize);
         for (let i = 1; i < pageCount; i++) {
-            if (pages.length < 10) {
+            if (pages.length < 90) {
                 pages.push(i);
             }
         }

@@ -8,6 +8,7 @@ import { StoreType } from './components/store/reduxStore/storeRedux';
 import { DialogsContainer } from "./components/Dialogs/DialogsContainer";
 import { UsersContainer } from "./components/Users/UserContainer";
 import { ProfileC } from './components/Profile/ProfileContainer';
+import HeaderContainer from './components/Header/HeaderContainer';
 
 
 
@@ -20,14 +21,13 @@ function App(props: AppPropsType) {
     // debugger
     return (
         <div className="app-wrapper">
-            <Header />
+            <HeaderContainer />
             <Nav />
             <div className="app-wrapper-content">
                 <Routes>
                     <Route path={'/dialogs'} element={<DialogsContainer />} />
                     <Route path="/profile/:userId" element={<ProfileC/>}/>
                     <Route path="/profile" element={<ProfileC/>}/>
-                    {/* <Route path={`/profile/:userId`} element={<ProfileC />} /> */}
                     <Route path={'/users'} element={<UsersContainer />} />
                 </Routes>
             </div>
